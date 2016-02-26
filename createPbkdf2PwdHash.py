@@ -18,3 +18,8 @@ while iterations < 25000:
     iterations = int(raw_input('Please provide the amount of iterations (min 25000): '))
 
 passwordSalt = os.urandom(32)
+hexPasswordSalt = binascii.hexlify(passwordSalt)
+passwordHash = hashlib.pbkdf2_hmac('sha512', desiredPassword, passwordSalt, iterations, 128)
+hexPasswordHash = binascii.hexlify(passwordHash)
+print('Password hash: ', hexPasswordHash)
+print('Salt hash: ', hexPasswordSalt)
