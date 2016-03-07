@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # This creates PBKDF2 Hashed passwords to be used with Puppet/Chef
 # when creating users for OS X 10.8 onwards
@@ -5,7 +6,7 @@
 # TUT IT Services / TUTMac
 import os
 import argparse
-import sys
+#import sys
 import binascii
 import hashlib
 
@@ -15,11 +16,13 @@ args = parser.parse_args()
 desiredPassword = raw_input('Please enter the desired password: ')
 iterations = 0
 while iterations < 25000:
-    iterations = int(raw_input('Please provide the amount of iterations (min 25000): '))
-
+    try:
+        iterations = int(raw_input('Please provide the amount of iterations (min 25000): '))
+    except ValueError:
+        iterations = 25000
 passwordSalt = os.urandom(32)
 hexPasswordSalt = binascii.hexlify(passwordSalt)
 passwordHash = hashlib.pbkdf2_hmac('sha512', desiredPassword, passwordSalt, iterations, 128)
 hexPasswordHash = binascii.hexlify(passwordHash)
-print('Password hash: ', hexPasswordHash)
-print('Salt hash: ', hexPasswordSalt)
+print 'Password hash: ', hexPasswordHash
+print 'Salt hash: ', hexPasswordSalt
