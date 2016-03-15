@@ -13,21 +13,15 @@ import hashlib
 parser = argparse.ArgumentParser(description='Create PBKDF2 passwords for user creation with Puppet/Chef for OS X 10.8 and later. The created password will have a salt of a random string with defined length and will use defined digest, with a desired derived length.')
 parser.add_argument('Password', help="Password to create the hash from")
 parser.add_argument('-sl','--StringLength', help="Length of the random string (default 32)", type=int, default=32, nargs=1)
-parser.add_argument('-i','--iterations', help="Number of iterations, min. 25000", type=int, default=25000, nargs=1)
-parser.add_argument('-d', '--digest', help="Digest to be used. Defaults to sha512", default='sha512', nargs=1, choices=['sha512', 'sha384', 'sha256'])
-parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key lenght, default 128", nargs=1)
+parser.add_argument('-i','--iterations', help="Number of iterations, min. 25000", type=int, default=25000)
+parser.add_argument('-d', '--digest', help="Digest to be used. Defaults to sha512", default='sha512', choices=['sha512', 'sha384', 'sha256'])
+parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key lenght, default 128")
 parser.add_argument('-v','--verbose', action='count', help="Increase the verbosity")
 #parser.add_argument
 args = parser.parse_args()
 
 if args.iterations < 25000:
     args.iterations = 25000
-    #
-    # try:
-    #     args.iterations = int(raw_input('Please provide the amount of iterations (min 25000): '))
-    # except ValueError:
-    #     iterations = 25000
-
 
 if args.verbose:
     print "PBKDF2 hash will be created with the following arguments"
