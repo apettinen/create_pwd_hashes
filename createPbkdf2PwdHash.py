@@ -12,30 +12,34 @@ import argparse
 import binascii
 import hashlib
 
-parser = argparse.ArgumentParser(description='Create PBKDF2 passwords for user creation with Puppet/Chef for OS X 10.8 and later. The created password will have a salt of a random string with defined length and will use defined digest, with a desired derived length.')
-parser.add_argument('-pwd', '--Password', help="Password to create the hash from", type=str)
-parser.add_argument('-sl', '--StringLength', help="Length of the random string (default 32)", type=int, default=32, nargs=1)
-parser.add_argument('-i', '--iterations', help="Number of iterations, min. 25000", type=int, default=25000)
-parser.add_argument('-d', '--digest', help="Digest to be used. Defaults to sha512", default='sha512', choices=['sha512', 'sha384', 'sha256'])
-parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key lenght, default 128")
-parser.add_argument('-v', '--verbose', action='count', help="Increase the verbosity")
-#parser.add_argument
-args = parser.parse_args()
-
-def createHashes(password, stringLenght, iterations, digest, derivedLength):
+def createHashes(password, stringLength, iterations, digest, derivedLength):
     """Main function: all the lifting happens here"""
     # check that input values are sane (switch to at least the default)
-    if args.iterations and args.iterations < 25000:
-        args.iterations = 25000
+    if iterations < 25000:
+        iterations = 25000
+
+#    if
     #else if args.iterations is None:
 
-    passwordSalt = os.urandom(args.StringLength)
-    passwordHash = hashlib.pbkdf2_hmac(args.digest, args.Password, passwordSalt, args.iterations, args.DerivedLength)
+    passwordSalt = os.urandom(stringLength)
+    passwordHash = hashlib.pbkdf2_hmac(digest, password, passwordSalt, iterations, derivedLength)
 
     hexPasswordSalt = binascii.hexlify(passwordSalt)
     hexPasswordHash = binascii.hexlify(passwordHash)
+    return hexPasswordHash, hexPasswordSalt
 
-if __name__ == "__main__":
+def main():
+    """Main function"""
+    parser = argparse.ArgumentParser(description='Create PBKDF2 passwords for user creation with Puppet/Chef for OS X 10.8 and later. The created password will have a salt of a random string with defined length and will use defined digest, with a desired derived length.')
+    parser.add_argument('-pwd', '--Password', help="Password to create the hash from", type=str)
+    parser.add_argument('-sl', '--StringLength', help="Length of the random string (default 32)", type=int, default=32, nargs=1)
+    parser.add_argument('-i', '--iterations', help="Number of iterations, min. 25000", type=int, default=25000)
+    parser.add_argument('-d', '--digest', help="Digest to be used. Defaults to sha512", default='sha512', choices=['sha512', 'sha384', 'sha256'])
+    parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key lenght, default 128")
+    parser.add_argument('-v', '--verbose', action='count', help="Increase the verbosity")
+    #parser.add_argument
+    args = parser.parse_args()
+
     # stringLenght, iterations, digest, derivedLength
     if args.Password is None:
         args.Password = raw_input('Please enter the desired password: ')
@@ -52,7 +56,7 @@ if __name__ == "__main__":
         # passwordSalt = os.urandom(32)
         # hexPasswordSalt = binascii.hexlify(passwordSalt)
 
-    createHashes(args.Password, args.stringLenght, args.iterations, args.digest, args.DerivedLength)
+    outPwdHash, outPwdSalt = createHashes(args.Password, args.stringLenght, args.iterations, args.digest, args.DerivedLength)
 
     if args.verbose:
         print "PBKDF2 hash will be created with the following arguments"
@@ -62,5 +66,8 @@ if __name__ == "__main__":
         print 'Defined digest:', args.digest
         print 'Derived Lenght:', args.DerivedLength
 
-    print 'Password hash: ', hexPasswordHash
-    print 'Salt hash: ', hexPasswordSalt
+    print 'Password hash: ', outPwdHash
+    print 'Salt hash: ', outPwdSalt
+
+if __name__ == "__main__":
+    main()
