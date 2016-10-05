@@ -35,12 +35,12 @@ def main():
     parser.add_argument('-sl', '--StringLength', help="Length of the random string (default 32)", type=int, default=32, nargs=1)
     parser.add_argument('-i', '--iterations', help="Number of iterations, min. 25000", type=int, default=25000)
     parser.add_argument('-d', '--digest', help="Digest to be used. Defaults to sha512", default='sha512', choices=['sha512', 'sha384', 'sha256'])
-    parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key lenght, default 128")
+    parser.add_argument('-dl', '--DerivedLength', type=int, default=128, help="Desired derived key length, default 128")
     parser.add_argument('-v', '--verbose', action='count', help="Increase the verbosity")
     #parser.add_argument
     args = parser.parse_args()
 
-    # stringLenght, iterations, digest, derivedLength
+    # stringLength, iterations, digest, derivedLength
     if args.Password is None:
         args.Password = raw_input('Please enter the desired password: ')
 
@@ -56,7 +56,7 @@ def main():
         # passwordSalt = os.urandom(32)
         # hexPasswordSalt = binascii.hexlify(passwordSalt)
 
-    outPwdHash, outPwdSalt = createHashes(args.Password, args.stringLenght, args.iterations, args.digest, args.DerivedLength)
+    outPwdHash, outPwdSalt = createHashes(args.Password, args.StringLength, args.iterations, args.digest, args.DerivedLength)
 
     if args.verbose:
         print "PBKDF2 hash will be created with the following arguments"
@@ -64,7 +64,7 @@ def main():
         print 'Salt string length:', args.StringLength
         print 'Number of iterations:', args.iterations
         print 'Defined digest:', args.digest
-        print 'Derived Lenght:', args.DerivedLength
+        print 'Derived length:', args.DerivedLength
 
     print 'Password hash: ', outPwdHash
     print 'Salt hash: ', outPwdSalt
