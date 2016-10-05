@@ -1,9 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # pylint: disable=C0301, C0103
-"""Create PBKDF2 hashed passwords"""
-# This creates PBKDF2 Hashed passwords to be used with e.g. Puppet or Chef
-# when creating users for OS X 10.8 onwards
+"""Create PBKDF2 hashed passwords
+
+Creates PBKDF2 Hashed passwords to be used with e.g. Puppet or Chef when creating users for OS X 10.8 onwards
+
+Antti Pettinen (Tampere University of Technology)
+Copyright 2016 Tampere University of Technology
+License: Apache 2.0
+"""
+
 # Antti Pettinen
 # TUT IT Services / TUTMac
 import os
