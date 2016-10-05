@@ -10,11 +10,8 @@ Copyright 2016 Tampere University of Technology
 License: Apache 2.0
 """
 
-# Antti Pettinen
-# TUT IT Services / TUTMac
 import os
 import argparse
-#import sys
 import binascii
 import hashlib
 
@@ -23,9 +20,6 @@ def createHashes(password, stringLength, iterations, digest, derivedLength):
     # check that input values are sane (switch to at least the default)
     if iterations < 25000:
         iterations = 25000
-
-#    if
-    #else if args.iterations is None:
 
     passwordSalt = os.urandom(stringLength)
     passwordHash = hashlib.pbkdf2_hmac(digest, password, passwordSalt, iterations, derivedLength)
@@ -49,18 +43,6 @@ def main():
     # stringLength, iterations, digest, derivedLength
     if args.Password is None:
         args.Password = raw_input('Please enter the desired password: ')
-
-    #if args.
-
-        # desiredPassword = raw_input('Please enter the desired password: ')
-        # iterations = 0
-        # while iterations < 25000:
-        #     try:
-        #         iterations = int(raw_input('Please provide the amount of iterations (min 25000): '))
-        #     except ValueError:
-        #         iterations = 25000
-        # passwordSalt = os.urandom(32)
-        # hexPasswordSalt = binascii.hexlify(passwordSalt)
 
     outPwdHash, outPwdSalt = createHashes(args.Password, args.StringLength, args.iterations, args.digest, args.DerivedLength)
 
